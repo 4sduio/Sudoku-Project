@@ -42,22 +42,3 @@ class Cell:
             self.screen.blit(number, cell)
 
 
-
-
-
-#
-#
-# def gameloop():
-#     screen = pygame.display.set_mode((810,810))
-#     screen.fill((255,255,255))
-#     test = Cell(5,1,1,screen)
-#     while True:
-#
-#         for event in pygame.event.get():
-#             if event.type == pygame.MOUSEBUTTONDOWN:
-#                 x,y = pygame.mouse.get_pos()
-#                 if test.row< x < test.row +81 and test.col< y < test.col+81:
-#                     test.draw()
-#
-#         pygame.display.flip()
-# gameloop()
