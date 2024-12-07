@@ -1,6 +1,64 @@
 from cell import *
 from sudoku_generator import generate_sudoku
+from sudoku_generator import SudokuGenerator
 import pygame
+
+
+def valid_in_box(board, row_start, col_start, num):
+    count = 0
+    for i in range(0, 3):
+        if board[row_start + i][col_start] == num:
+            if count >1:
+                return False
+            count +=1
+        for j in range(0, 3):
+            if board[row_start + i][col_start + j] == num:
+                if count >1:
+                    return False
+                count +=1
+    return True
+
+def valid_in_col(board, col, num):
+    count = 0
+    for row in range(9):
+        if board[row][col] == num:
+            if count > 1:
+                return False
+            count +=1
+    return True
+
+def valid_in_row(board, row, num):
+    count = 0
+    for number in board[row]:
+        if num == number:
+            count +=1
+        if count > 1:
+            return False
+    return True
+
+def is_valid(board, row, col, num):
+    if not valid_in_row(board, row, num) or not valid_in_col(board, col, num) :
+        return False
+
+    if 0 < row <= 2:
+        row = 0
+    elif 3 < row <= 5:
+        row = 3
+    elif 6 < row <= 8:
+        row = 6
+
+    if 0 < col <= 2:
+        col = 0
+    elif 3 < col <= 5:
+        col = 3
+    elif 6 < col <= 9:
+        col = 6
+
+
+    if not valid_in_box(board,row, col, num):
+        return False
+
+    return True
 
 class Board:
 
@@ -13,7 +71,7 @@ class Board:
         self.selected = None
         self.initial_board = []
         if difficulty == 'easy':
-            board_choice = generate_sudoku(9, 30)
+            board_choice = generate_sudoku(9, 1)
         elif difficulty == 'medium':
             board_choice = generate_sudoku(9, 40)
         elif difficulty == 'hard':
@@ -25,7 +83,6 @@ class Board:
         self.initial_board = board_choice
 
     def draw(self):
-        self.screen.fill((255, 255, 255))
         square_size = self.width / 9
         for row in range(10):
             if row % 3 == 0:
@@ -99,11 +156,17 @@ class Board:
                     return(row, col)
         return None
 
+
+
     def check_board(self):
+        temp_board = [[0 for x in range(9)] for y in range(9)]
         for row in range(9):
             for col in range(9):
-                value = self.board[row][col].get_cell_value()
-                if not self.sudoku_generator.is_valid(row, col, value):
+                temp_board[row][col] = int(self.board[row][col].value)
+
+        for row in range(9):
+            for col in range(9):
+                if not is_valid(temp_board, row, col, int(self.board[row][col].value)):
                     return False
         return True
 
