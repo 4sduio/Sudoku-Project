@@ -1,5 +1,4 @@
 import pygame
-from pygame.examples.scrap_clipboard import screen
 
 pygame.init()
 
@@ -9,36 +8,39 @@ class Cell:
 
     def __init__(self,value,row,col,screen):
         self.screen = screen
-        self.row = 81*(row-1)
-        self.col = 81*(col-1)
-        self.sketchedvalue = value
+        self.row = row
+        self.col = col
+        self.sketched_value = 0
+        self.value = value
+
 
     def set_cell_value(self, value):
-        sketch = False
         self.value = value
 
     def set_sketched_value(self, value):
-        sketch = True
-        self.sketchedvalue = value
+        self.sketched_value = value
 
+    def get_cell_value(self):
+        return self.value
 
     def draw(self):
-        Square = pygame.Surface((78,78))
-        Square.fill((255,255,255))
-        outline = pygame.Surface((81,81))
-        outline.fill('red')
-
-        cell = Square.get_rect(center=((41+ self.row,41+self.col)))
+        square_size = self.screen.get_width() // 9
+        square = pygame.Rect(self.col * square_size, self.row * square_size, square_size, square_size)
         font = pygame.font.SysFont('comicsans', 30)
+        pygame.draw.rect(self.screen, (0, 0, 0), square, 1)
+        if self.sketched_value != 0:
+            number = font.render(str(self.sketched_value), True, 'black')
+            number_placement = number.get_rect(center = (self.col * square_size + square_size // 2, self.row * square_size + square_size //2))
+            self.screen.blit(number, number_placement)
 
-        self.screen.blit(outline, cell)
-        self.screen.blit(Square, cell)
-        if sketch:
-            number = font.render(str(self.sketchedvalue), True, 'grey')
-            if 9 >= self.sketchedvalue > 0:
-                self.screen.blit(number, Square.get_rect(topleft=(self.row, self.col)))
-        else:
-            number = font.render(str(self.sketchedvalue), True, 'black')
-            self.screen.blit(number, cell)
+
+
+
+
+
+
+
+
+
 
 
