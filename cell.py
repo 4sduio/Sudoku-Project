@@ -15,6 +15,7 @@ class Cell:
 
 
     def set_cell_value(self, value):
+        self.sketched_value = 0
         self.value = value
 
     def set_sketched_value(self, value):
@@ -28,12 +29,15 @@ class Cell:
         square = pygame.Rect(self.col * square_size, self.row * square_size, square_size, square_size)
         font = pygame.font.SysFont('comicsans', 30)
         pygame.draw.rect(self.screen, (0, 0, 0), square, 1)
-        if self.sketched_value != 0:
-            number = font.render(str(self.sketched_value), True, 'black')
+        if self.value != 0:
+            number = font.render(str(self.value), True, 'black')
             number_placement = number.get_rect(center = (self.col * square_size + square_size // 2, self.row * square_size + square_size //2))
             self.screen.blit(number, number_placement)
-
-
+        elif self.sketched_value != 0:
+            number = font.render(str(self.sketched_value), True, 'gray')
+            number_placement = number.get_rect(
+                topleft=(self.col * square_size , self.row * square_size))
+            self.screen.blit(number, number_placement)
 
 
 

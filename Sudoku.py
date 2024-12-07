@@ -5,9 +5,9 @@ from sudoku_generator import *
 from board import *
 from cell import *
 
-WIDTH = 600
-HEIGHT = 600
-CELL_SIZE = WIDTH // 9
+WIDTH = 720
+HEIGHT = 900
+CELL_SIZE = 72
 
 pygame.init()
 
@@ -26,7 +26,8 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
                 row, col = board.click(y, x)
-                board.select(row, col)
+                if row < 9 and col < 9:
+                    board.select(row, col)
             elif event.type == pygame.KEYDOWN:
                 if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
                                  pygame.K_8, pygame.K_9]:
@@ -40,8 +41,9 @@ def main():
                         value = board.board[row][col].sketched_value
                         if value != 0:
                             board.place_number(value)
-                elif event.type == pygame.K_BACKSPACE:
-                    board.clear()
+                elif event.key == pygame.K_BACKSPACE:
+                    if board.selected:
+                        board.clear()
         board.draw()
         pygame.display.update()
         clock.tick(60)

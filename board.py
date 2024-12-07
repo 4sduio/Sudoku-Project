@@ -22,19 +22,19 @@ class Board:
         for row in range(9):
             for col in range(9):
                 self.board[row][col].set_cell_value(board_choice[row][col])
-        self.initial_board = [row[:] for row in board_choice]
+        self.initial_board = board_choice
 
     def draw(self):
         self.screen.fill((255, 255, 255))
         square_size = self.width / 9
-        for row in range(9):
+        for row in range(10):
             if row % 3 == 0:
-                line_width = 2
+                line_width = 5
             else:
                 line_width = 1
             pygame.draw.line(self.screen, (0, 0, 0), (0, row * square_size), (self.width, row * square_size),
                              line_width)
-            pygame.draw.line(self.screen, (0, 0, 0), (row * square_size, 0), (row * square_size, self.height),
+            pygame.draw.line(self.screen, (0, 0, 0), (row * square_size, 0), (row * square_size, self.width),
                              line_width)
         for row in range(9):
             for col in range(9):
@@ -43,8 +43,6 @@ class Board:
             pygame.draw.rect(self.screen, (255, 0, 0),
                              (self.selected[1] * square_size, self.selected[0] * square_size, square_size, square_size),
                              3)
-        if self.selected:
-            pygame.draw.rect(self.screen, (255, 0, 0), (self.selected[1] * square_size, self.selected[0] * square_size, square_size, square_size), 3)
         pygame.display.update()
 
     def select(self, row, col):
@@ -54,12 +52,15 @@ class Board:
         square_size = self.width / 9
         row = int(x // square_size)
         col = int(y // square_size)
+
         return row, col
 
     def clear(self):
         if self.selected:
             row, col = self.selected
-            self.board[row][col].set_sketched_value(0)
+            if self.initial_board[row][col] == 0:
+                self.board[row][col].set_cell_value(0)
+                self.board[row][col].draw()
 
     def sketch(self, value):
         if self.selected:
